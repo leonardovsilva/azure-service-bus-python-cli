@@ -1,0 +1,6 @@
+termcolor==1.1.0
+azure-servicebus==7.1.1
+#azure-mgmt-servicebus==6.0.0
+python-console-menu==1.1.0
+
+
