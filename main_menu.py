@@ -1,5 +1,4 @@
 from python_console_menu import AbstractMenu, MenuItem
-
 from queue_process import QueueProcess
 
 
