@@ -4,12 +4,14 @@ import time
 
 loggers = {}
 config_obj = None
+is_verbose = False
 
 
 class CustomLog:
 
-    def __init__(self,  config):
-        global config_obj
+    def __init__(self,  config, verbose):
+        global config_obj, is_verbose
+        is_verbose = verbose
         config_obj = config
 
     @staticmethod
@@ -19,7 +21,10 @@ class CustomLog:
         if loggers.get(logger_name):
             return loggers.get(logger_name)
         else:
-            root_logger = logging.getLogger()
+            if is_verbose:
+                root_logger = logging.getLogger()
+            else:
+                root_logger = logging.getLogger(logger_name)
 
             try:
                 log_path = config_obj.config_export['DEFAULT']['LogPath']
