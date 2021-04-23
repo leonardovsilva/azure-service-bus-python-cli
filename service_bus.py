@@ -1,5 +1,4 @@
 import click
-import config
 from queue_process import QueueProcess
 
 
@@ -11,7 +10,7 @@ def main(ctx, verbose):
     group_commands = ['queue', 'topic']
     """
         serviceBusPythonExplorer is a command line tool that helps management Azure Service Bus.\n
-          example: python service_bus.py peek -n [queue_name]
+          example: python service_bus.py peek_queue -n [queue_name]
     """
     ctx.obj = {} if not ctx.obj else ctx.obj
 
@@ -19,12 +18,12 @@ def main(ctx, verbose):
         click.echo("Specify one of the commands below")
         print(*group_commands, sep='\n')
 
-    config_obj = config.Config()
-    config_obj.init(verbose)
     ctx.obj['VERBOSE'] = verbose
+    #config_obj = config.Config()
+    #config_obj.init()
 
 
-@main.command('peek')
+@main.command('peek_queue')
 @click.pass_context
 @click.option('--queue_name', '-n', required=True, help="Peek messages from queue")
 @click.option('--max_message_count', '-mc', required=False, default=None, help="Max message count")
