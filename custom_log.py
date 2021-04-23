@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+from pythonjsonlogger import jsonlogger
 
 
 class CustomLog:
@@ -16,6 +17,7 @@ class CustomLog:
             config_obj.config_export['DEFAULT']['SaveMessagesToFile'])
 
         log_formatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
+        #json_log_formatter = jsonlogger.JsonFormatter()
 
         CustomLog.root_logger.setLevel(logging.INFO)
 
@@ -24,9 +26,11 @@ class CustomLog:
             file_handler.setFormatter(log_formatter)
             CustomLog.root_logger.addHandler(file_handler)
 
-            console_handler = logging.StreamHandler()
-            console_handler.setFormatter(log_formatter)
-            CustomLog.root_logger.addHandler(console_handler)
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(log_formatter)
+        CustomLog.root_logger.addHandler(console_handler)
 
-    def log_info(self, message):
+    @staticmethod
+    def log_info(message):
         CustomLog.root_logger.info(message)
+

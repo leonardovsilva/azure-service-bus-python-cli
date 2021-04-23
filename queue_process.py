@@ -26,4 +26,4 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
                 for msg in received_msgs:
                     json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
-                    print(json_str)
+                    custom_log_obj.log_info(json_str)
