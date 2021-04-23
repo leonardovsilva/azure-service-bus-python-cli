@@ -17,7 +17,11 @@ class QueueProcess(service_bus_base.ServiceBusBase):
             if ctx.obj['GET_QUEUE_PROPERTIES']:
                 QueueProcess.get_queue_properties(ctx)
 
-            receiver = QueueProcess.service_bus_client.get_queue_receiver(queue_name=ctx.obj['QUEUE_NAME'])
+            if ctx.obj['DEAD_LETTER']:
+                receiver = QueueProcess.service_bus_client.get_queue_receiver(queue_name=ctx.obj['QUEUE_NAME'],
+                                                                              sub_queue=QueueProcess.DEAD_LETTER)
+            else:
+                receiver = QueueProcess.service_bus_client.get_queue_receiver(queue_name=ctx.obj['QUEUE_NAME'])
             with receiver:
                 received_msgs = receiver.peek_messages(max_message_count=max_message_count)
 
@@ -25,6 +29,7 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
                 for msg in received_msgs:
                     json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
+                    json_str = json_str.replace('\\"', '"')
                     custom_log_obj.log_info(json_str)
 
     @staticmethod
