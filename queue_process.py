@@ -12,9 +12,11 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         custom_log_obj = custom_log.CustomLog(ctx.obj['VERBOSE'], ctx.obj['LOG_PATH'])
         max_message_count = 5 if ctx.obj['MAX_MESSAGE_COUNT'] is None else int(ctx.obj['MAX_MESSAGE_COUNT'])
 
-        print(max_message_count)
         with QueueProcess.service_bus_client:
-            QueueProcess.get_queue_properties(ctx)
+
+            if ctx.obj['GET_QUEUE_PROPERTIES']:
+                QueueProcess.get_queue_properties(ctx)
+
             receiver = QueueProcess.service_bus_client.get_queue_receiver(queue_name=ctx.obj['QUEUE_NAME'])
             with receiver:
                 received_msgs = receiver.peek_messages(max_message_count=max_message_count)

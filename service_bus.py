@@ -28,13 +28,15 @@ def main(ctx, verbose):
 @click.option('--queue_name', '-n', required=True, help="Peek messages from queue")
 @click.option('--max_message_count', '-mc', required=False, default=None, help="Max message count")
 @click.option('--log_path', '-l', required=False, default=None, help="Path to log console outputs")
-def peek_messages(ctx, queue_name, max_message_count, log_path):
+@click.option('--get_queue_properties', '-qp', is_flag=True, help="Get queue properties")
+def peek_messages(ctx, queue_name, max_message_count, log_path, get_queue_properties):
     """
             :   Peek messages from queue.
     """
     ctx.obj['QUEUE_NAME'] = queue_name
     ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
     ctx.obj['LOG_PATH'] = log_path
+    ctx.obj['GET_QUEUE_PROPERTIES'] = get_queue_properties
 
     queue_process_obj = QueueProcess()
     queue_process_obj.spying_message_queue(ctx)
