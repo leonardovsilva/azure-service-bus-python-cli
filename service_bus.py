@@ -2,13 +2,6 @@ import click
 import config
 from queue_process import QueueProcess
 
-'''if __name__ == '__main__':
-    config_obj = config.Config()
-    config_obj.init()
-    time.sleep(0.1)
-    mainMenu = main_menu.MainMenu()
-    mainMenu.display()'''
-
 
 @click.group(invoke_without_command=True)
 @click.pass_context
@@ -33,14 +26,19 @@ def main(ctx, verbose):
 
 @main.command('peek')
 @click.pass_context
-@click.option('--queue_name', '-n', prompt=True, default=None,
-              required=True, help="Peek messages from queue")
-def peek_messages(ctx, queue_name):
+@click.option('--queue_name', '-n', required=True, help="Peek messages from queue")
+@click.option('--max_message_count', '-mc', required=False, default=None, help="Max message count")
+@click.option('--log_path', '-l', required=False, default=None, help="Path to log console outputs")
+def peek_messages(ctx, queue_name, max_message_count, log_path):
     """
             :   Peek messages from queue.
     """
+    ctx.obj['QUEUE_NAME'] = queue_name
+    ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
+    ctx.obj['LOG_PATH'] = log_path
+
     queue_process_obj = QueueProcess()
-    queue_process_obj.spying_message_queue(queue_name, ctx)
+    queue_process_obj.spying_message_queue(ctx)
 
 
 if __name__ == '__main__':

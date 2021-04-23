@@ -1,18 +1,17 @@
 import logging
-import os
 import time
 
 loggers = {}
-config_obj = None
 is_verbose = False
+log_path = None
 
 
 class CustomLog:
 
-    def __init__(self,  config, verbose):
-        global config_obj, is_verbose
+    def __init__(self,  verbose, log):
+        global log_path, is_verbose
         is_verbose = verbose
-        config_obj = config
+        log_path = log
 
     @staticmethod
     def get_logger(logger_name):
@@ -26,13 +25,7 @@ class CustomLog:
             else:
                 root_logger = logging.getLogger(logger_name)
 
-            try:
-                log_path = config_obj.config_export['DEFAULT']['LogPath']
-            except Exception:
-                log_path = os.path.dirname(os.path.abspath(__file__))
-
-            save_messages_to_file = False if config_obj.config_export['DEFAULT']['SaveMessagesToFile'] is None else bool(
-                config_obj.config_export['DEFAULT']['SaveMessagesToFile'])
+            save_messages_to_file = False if log_path is None else True
 
             log_formatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
 
