@@ -1,48 +1,45 @@
 import json
 from azure.core.exceptions import AzureError
-import custom_log
 import service_bus_base
 import service_bus_custom_encoder
 
 
 class QueueProcess(service_bus_base.ServiceBusBase):
 
-    @staticmethod
-    def spying_message_queue(ctx):
-        custom_log_obj = custom_log.CustomLog(ctx.obj['VERBOSE'], ctx.obj['LOG_PATH'])
-        max_message_count = 5 if ctx.obj['MAX_MESSAGE_COUNT'] is None else int(ctx.obj['MAX_MESSAGE_COUNT'])
+    def __init__(self, ctx):
+        service_bus_base.ServiceBusBase.__init__(self, ctx)
 
-        with QueueProcess.service_bus_client:
+    def spying_message_queue(self):
 
-            if ctx.obj['GET_QUEUE_PROPERTIES']:
-                QueueProcess.get_queue_properties(ctx)
+        max_message_count = 5 if self.ctx.obj['MAX_MESSAGE_COUNT'] is None else int(self.ctx.obj['MAX_MESSAGE_COUNT'])
 
-            if ctx.obj['DEAD_LETTER']:
-                receiver = QueueProcess.service_bus_client.get_queue_receiver(queue_name=ctx.obj['QUEUE_NAME'],
-                                                                              sub_queue=QueueProcess.DEAD_LETTER)
+        with self.service_bus_client:
+
+            if self.ctx.obj['GET_QUEUE_PROPERTIES']:
+                QueueProcess.get_queue_properties()
+
+            if self.ctx.obj['DEAD_LETTER']:
+                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
+                                                                              sub_queue=self.DEAD_LETTER)
             else:
-                receiver = QueueProcess.service_bus_client.get_queue_receiver(queue_name=ctx.obj['QUEUE_NAME'])
+                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'])
             with receiver:
                 received_msgs = receiver.peek_messages(max_message_count=max_message_count)
 
-                custom_log_obj.log_info("%s %s" % ('Number of messages: ', len(received_msgs),))
+                self.custom_log_obj.log_info("%s %s" % ('Number of messages: ', len(received_msgs),))
 
                 for msg in received_msgs:
                     json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
                     json_str = json_str.replace('\\"', '"')
-                    custom_log_obj.log_info(json_str)
+                    self.custom_log_obj.log_info(json_str)
 
-    @staticmethod
-    def get_queue_properties(ctx):
-        print("-- Get Queue Runtime Properties")
+    def get_queue_properties(self):
+        self.custom_log_obj.log_info("-- Get Queue Runtime Properties")
         try:
-            get_queue_runtime_properties = QueueProcess.servicebus_mgmt_client.get_queue_runtime_properties(ctx.obj['QUEUE_NAME'])
-            print("Queue Name:", get_queue_runtime_properties.name)
-            print("Queue Runtime Properties:")
-            print("Updated at:", get_queue_runtime_properties.updated_at_utc)
-            print("Size in Bytes:", get_queue_runtime_properties.size_in_bytes)
-            print("Message Count:", get_queue_runtime_properties.total_message_count)
-            print("Please refer to QueueRuntimeProperties from complete available runtime properties.")
-            print("")
+            get_queue_runtime_properties = self.servicebus_mgmt_client.get_queue_runtime_properties(self.ctx.obj['QUEUE_NAME'])
+            self.custom_log_obj.log_info("%s %s" % ('Queue Name:', get_queue_runtime_properties.name,))
+            self.custom_log_obj.log_info("%s %s" % ('Updated at: ', get_queue_runtime_properties.updated_at_utc,))
+            self.custom_log_obj.log_info("%s %s" % ('Size in Bytes: ', get_queue_runtime_properties.size_in_bytes,))
+            self.custom_log_obj.log_info("%s %s" % ('Message Count:', get_queue_runtime_properties.total_message_count,))
         except AzureError:
-            print("Not authorized or invalid request to obtaining  queue runtime properties")
+            self.custom_log_obj.log_info("Not authorized or invalid request to obtaining  queue runtime properties")
