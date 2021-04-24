@@ -65,7 +65,7 @@ def peek_messages(ctx, confirm, log_path, dead_letter):
     else:
         import colorama
         colorama.init()
-        print(colorama.Fore.LIGHTYELLOW_EX + 'Invalid word the operation will not proceed')
+        print(colorama.Fore.LIGHTRED_EX + 'Invalid word the operation will not proceed')
 
 
 if __name__ == '__main__':
