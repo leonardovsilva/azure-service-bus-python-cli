@@ -63,7 +63,6 @@ def peek_messages(ctx, confirm, log_path, dead_letter):
         ctx.obj['LOG_PATH'] = log_path
         ctx.obj['DEAD_LETTER'] = dead_letter
     else:
-        import colorama
         colorama.init()
         print(colorama.Fore.LIGHTRED_EX + 'Invalid word the operation will not proceed')
 
