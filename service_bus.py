@@ -1,4 +1,5 @@
 import click
+import colorama
 from queue_process import QueueProcess
 
 
@@ -46,6 +47,25 @@ def peek_messages(ctx, max_message_count, log_path, get_queue_properties, dead_l
 
     queue_process_obj = QueueProcess(ctx)
     queue_process_obj.spying_message_queue()
+
+
+@main.command('purge_queue')
+@click.pass_context
+@click.option('--confirm', prompt='Please type the word [CONFIRM]')
+@click.option('--log_path', '-l', required=False, default=None, help="Path to log console outputs")
+@click.option('--dead_letter', '-dl', is_flag=True, help="Purge dead letter messages")
+def peek_messages(ctx, confirm, log_path, dead_letter):
+    """
+            :   Peek messages from queue.
+    """
+
+    if confirm == "CONFIRM":
+        ctx.obj['LOG_PATH'] = log_path
+        ctx.obj['DEAD_LETTER'] = dead_letter
+    else:
+        import colorama
+        colorama.init()
+        print(colorama.Fore.LIGHTYELLOW_EX + 'Invalid word the operation will not proceed')
 
 
 if __name__ == '__main__':
