@@ -34,15 +34,17 @@ def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path):
 
 @main.command('peek_queue')
 @click.pass_context
-@click.option('--max_message_count', '-mc', required=False, default=None, help="Max message count")
+@click.option('--max_message_count', '-mc', required=False, default=5, help="Max message count. Default is 5")
+@click.option('--pages', required=False, default=1, help="Number of pages to run. Default is 1")
 @click.option('--get_queue_properties', '-qp', is_flag=True, help="Get queue properties")
 @click.option('--dead_letter', '-dl', is_flag=True, help="Peek messages from dead letter queue")
 @click.option('--pretty', is_flag=True, help="Pretty json log messages")
-def peek_messages(ctx, max_message_count, get_queue_properties, dead_letter, pretty):
+def peek_messages(ctx, max_message_count, pages, get_queue_properties, dead_letter, pretty):
     """
             :   Peek messages from queue.
     """
     ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
+    ctx.obj['PAGES'] = pages
     ctx.obj['GET_QUEUE_PROPERTIES'] = get_queue_properties
     ctx.obj['DEAD_LETTER'] = dead_letter
     ctx.obj['PRETTY'] = pretty
@@ -56,7 +58,7 @@ def peek_messages(ctx, max_message_count, get_queue_properties, dead_letter, pre
 @click.option('--queue_name', '-qn', required=True, help="Name of the message bus queue")
 @click.option('--confirm', prompt='Please type the word [confirm]')
 @click.option('--dead_letter', '-dl', is_flag=True, help="Purge dead letter messages")
-@click.option('--max_message_count', '-mc', required=False, default=None, help="Max message count")
+@click.option('--max_message_count', '-mc', required=False, default=50, help="Max message count. Default is 50")
 def purge_queue(ctx, queue_name, confirm, dead_letter, max_message_count):
     """
             :   Purge all messages from queue.

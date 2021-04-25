@@ -12,8 +12,6 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
     def spying_message_queue(self):
 
-        max_message_count = 5 if self.ctx.obj['MAX_MESSAGE_COUNT'] is None else int(self.ctx.obj['MAX_MESSAGE_COUNT'])
-
         with self.service_bus_client:
 
             if self.ctx.obj['GET_QUEUE_PROPERTIES']:
@@ -22,15 +20,23 @@ class QueueProcess(service_bus_base.ServiceBusBase):
             receiver = QueueProcess.get_receiver(self)
 
             with receiver:
-                received_msgs = receiver.peek_messages(max_message_count=max_message_count)
-
-                self.custom_log_obj.log_info("%s %s" % ('Number of messages: ', len(received_msgs),))
-
-                for msg in received_msgs:
-                    if self.ctx.obj['PRETTY']:
-                        QueueProcess.log_message_pretty(self, msg)
+                sequence_number = 0
+                for x in range(self.ctx.obj['PAGES']):
+                    if sequence_number == 0:
+                        received_msgs = receiver.peek_messages(max_message_count=self.ctx.obj['MAX_MESSAGE_COUNT'])
                     else:
-                        QueueProcess.log_message(self, msg)
+                        received_msgs = receiver.peek_messages(max_message_count=self.ctx.obj['MAX_MESSAGE_COUNT'],
+                                                               sequence_number=sequence_number+1)
+
+                    self.custom_log_obj.log_info("%s %s" % ('Number of messages: ', len(received_msgs),))
+
+                    for msg in received_msgs:
+                        if self.ctx.obj['PRETTY']:
+                            QueueProcess.log_message_pretty(self, msg)
+                        else:
+                            QueueProcess.log_message(self, msg)
+                        sequence_number = msg.sequence_number
+                        print(sequence_number)
 
     def get_queue_properties(self):
         self.custom_log_obj.log_info("-- Get Queue Runtime Properties")
@@ -91,12 +97,11 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         self.custom_log_obj.log_info(json_str.replace("\\", ""))
 
     def purge_queue(self):
-        max_message_count = 50 if self.ctx.obj['MAX_MESSAGE_COUNT'] is None else int(self.ctx.obj['MAX_MESSAGE_COUNT'])
         receiver = QueueProcess.get_receiver(self)
 
         self.custom_log_obj.log_info("Purge queue started. Wait for completion")
         with receiver:
-            QueueProcess.__purge_queue_recursive(self, max_message_count, receiver)
+            QueueProcess.__purge_queue_recursive(self, self.ctx.obj['MAX_MESSAGE_COUNT'], receiver)
 
         self.custom_log_obj.log_info("Purge queue completed")
 
