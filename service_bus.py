@@ -10,7 +10,8 @@ from queue_process import QueueProcess
 @click.option('--queue_name', '-qn', required=False, help="Name of the message bus queue")
 @click.option('--topic_name', '-tn', required=False, help="Name of the message bus topic")
 @click.option('--subscription_name', '-sn', required=False, help="Name of the message bus subscription")
-def main(ctx, verbose, queue_name, topic_name, subscription_name):
+@click.option('--log_path', '-l', required=False, default=None, type=click.Path(exists=True), help="Path to log console outputs")
+def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path):
     group_commands = ['queue', 'topic']
     """
         serviceBusPythonExplorer is a command line tool that helps management Azure Service Bus.\n
@@ -26,6 +27,7 @@ def main(ctx, verbose, queue_name, topic_name, subscription_name):
     ctx.obj['QUEUE_NAME'] = queue_name
     ctx.obj['TOPIC_NAME'] = topic_name
     ctx.obj['SUBSCRIPTION_NAME'] = subscription_name
+    ctx.obj['LOG_PATH'] = log_path
     #config_obj = config.Config()
     #config_obj.init()
 
@@ -33,17 +35,17 @@ def main(ctx, verbose, queue_name, topic_name, subscription_name):
 @main.command('peek_queue')
 @click.pass_context
 @click.option('--max_message_count', '-mc', required=False, default=None, help="Max message count")
-@click.option('--log_path', '-l', required=False, default=None, help="Path to log console outputs")
 @click.option('--get_queue_properties', '-qp', is_flag=True, help="Get queue properties")
 @click.option('--dead_letter', '-dl', is_flag=True, help="Peek messages from dead letter queue")
-def peek_messages(ctx, max_message_count, log_path, get_queue_properties, dead_letter):
+@click.option('--pretty', is_flag=True, help="Pretty json log messages")
+def peek_messages(ctx, max_message_count, get_queue_properties, dead_letter, pretty):
     """
             :   Peek messages from queue.
     """
     ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
-    ctx.obj['LOG_PATH'] = log_path
     ctx.obj['GET_QUEUE_PROPERTIES'] = get_queue_properties
     ctx.obj['DEAD_LETTER'] = dead_letter
+    ctx.obj['PRETTY'] = pretty
 
     queue_process_obj = QueueProcess(ctx)
     queue_process_obj.spying_message_queue()
@@ -53,17 +55,15 @@ def peek_messages(ctx, max_message_count, log_path, get_queue_properties, dead_l
 @click.pass_context
 @click.option('--queue_name', '-qn', required=True, help="Name of the message bus queue")
 @click.option('--confirm', prompt='Please type the word [confirm]')
-@click.option('--log_path', '-l', required=False, default=None, help="Path to log console outputs")
 @click.option('--dead_letter', '-dl', is_flag=True, help="Purge dead letter messages")
 @click.option('--max_message_count', '-mc', required=False, default=None, help="Max message count")
-def purge_queue(ctx, queue_name, confirm, log_path, dead_letter, max_message_count):
+def purge_queue(ctx, queue_name, confirm, dead_letter, max_message_count):
     """
             :   Peek messages from queue.
     """
 
     if confirm.lower() == "confirm":
         ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
-        ctx.obj['LOG_PATH'] = log_path
         ctx.obj['DEAD_LETTER'] = dead_letter
         ctx.obj['QUEUE_NAME'] = queue_name
         queue_process_obj = QueueProcess(ctx)

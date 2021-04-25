@@ -27,7 +27,10 @@ class QueueProcess(service_bus_base.ServiceBusBase):
                 self.custom_log_obj.log_info("%s %s" % ('Number of messages: ', len(received_msgs),))
 
                 for msg in received_msgs:
-                    QueueProcess.log_message(self, msg)
+                    if self.ctx.obj['PRETTY']:
+                        QueueProcess.log_message_pretty(self, msg)
+                    else:
+                        QueueProcess.log_message(self, msg)
 
     def get_queue_properties(self):
         self.custom_log_obj.log_info("-- Get Queue Runtime Properties")
@@ -70,11 +73,22 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
         return receiver
 
+    def log_message_pretty(self, msg):
+        self.custom_log_obj.log_info("%s %s" % ('Message encoded size: ', msg.message.get_message_encoded_size(),))
+        json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
+        json_obj = json.loads(json_str)
+        json_obj["application_properties"] = json.loads(json_obj["application_properties"].replace("b'", "'").replace("'", '"').replace("None", '""'))
+        try:
+            json_obj["message"] = json.loads(json_obj["message"])
+        except Exception:
+            pass
+        json_str = json.dumps(json_obj, indent=4)
+        self.custom_log_obj.log_info(json_str)
+
     def log_message(self, msg):
         self.custom_log_obj.log_info("%s %s" % ('Message encoded size: ', msg.message.get_message_encoded_size(),))
         json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
-        json_str = json_str.replace('\\"', '"')
-        self.custom_log_obj.log_info(json_str)
+        self.custom_log_obj.log_info(json_str.replace("\\", ""))
 
     def purge_queue(self):
         max_message_count = 50 if self.ctx.obj['MAX_MESSAGE_COUNT'] is None else int(self.ctx.obj['MAX_MESSAGE_COUNT'])
