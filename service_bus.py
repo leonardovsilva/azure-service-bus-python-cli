@@ -51,17 +51,23 @@ def peek_messages(ctx, max_message_count, log_path, get_queue_properties, dead_l
 
 @main.command('purge_queue')
 @click.pass_context
-@click.option('--confirm', prompt='Please type the word [CONFIRM]')
+@click.option('--queue_name', '-qn', required=True, help="Name of the message bus queue")
+@click.option('--confirm', prompt='Please type the word [confirm]')
 @click.option('--log_path', '-l', required=False, default=None, help="Path to log console outputs")
 @click.option('--dead_letter', '-dl', is_flag=True, help="Purge dead letter messages")
-def peek_messages(ctx, confirm, log_path, dead_letter):
+@click.option('--max_message_count', '-mc', required=False, default=None, help="Max message count")
+def purge_queue(ctx, queue_name, confirm, log_path, dead_letter, max_message_count):
     """
             :   Peek messages from queue.
     """
 
-    if confirm == "CONFIRM":
+    if confirm.lower() == "confirm":
+        ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
         ctx.obj['LOG_PATH'] = log_path
         ctx.obj['DEAD_LETTER'] = dead_letter
+        ctx.obj['QUEUE_NAME'] = queue_name
+        queue_process_obj = QueueProcess(ctx)
+        queue_process_obj.purge_queue()
     else:
         colorama.init()
         print(colorama.Fore.LIGHTRED_EX + 'Invalid word the operation will not proceed')

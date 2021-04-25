@@ -19,21 +19,15 @@ class QueueProcess(service_bus_base.ServiceBusBase):
             if self.ctx.obj['GET_QUEUE_PROPERTIES']:
                 QueueProcess.get_queue_properties(self)
 
-            if self.ctx.obj['DEAD_LETTER']:
-                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
-                                                                              sub_queue=self.DEAD_LETTER)
-            else:
-                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'])
+            receiver = QueueProcess.get_receiver(self)
+
             with receiver:
                 received_msgs = receiver.peek_messages(max_message_count=max_message_count)
 
                 self.custom_log_obj.log_info("%s %s" % ('Number of messages: ', len(received_msgs),))
 
                 for msg in received_msgs:
-                    self.custom_log_obj.log_info("%s %s" % ('Message encoded size: ', msg.message.get_message_encoded_size(),))
-                    json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
-                    json_str = json_str.replace('\\"', '"')
-                    self.custom_log_obj.log_info(json_str)
+                    QueueProcess.log_message(self, msg)
 
     def get_queue_properties(self):
         self.custom_log_obj.log_info("-- Get Queue Runtime Properties")
@@ -43,7 +37,6 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
             self.custom_log_obj.log_info("-- Authorization Rules")
             for x in get_queue_properties.authorization_rules:
-                QueueProcess.dump(x)
                 self.custom_log_obj.log_info("%s %s" % ('Rights:', x.rights,))
                 self.custom_log_obj.log_info("%s %s" % ('Primary key:', x.primary_key,))
                 self.custom_log_obj.log_info("%s %s" % ('Secondary key:', x.secondary_key,))
@@ -68,3 +61,40 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
         except AzureError:
             self.custom_log_obj.log_info("Not authorized or invalid request to obtaining  queue runtime properties")
+
+    def get_receiver(self):
+        if self.ctx.obj['DEAD_LETTER']:
+            receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'], sub_queue=self.DEAD_LETTER)
+        else:
+            receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'])
+
+        return receiver
+
+    def log_message(self, msg):
+        self.custom_log_obj.log_info("%s %s" % ('Message encoded size: ', msg.message.get_message_encoded_size(),))
+        json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
+        json_str = json_str.replace('\\"', '"')
+        self.custom_log_obj.log_info(json_str)
+
+    def purge_queue(self):
+        max_message_count = 50 if self.ctx.obj['MAX_MESSAGE_COUNT'] is None else int(self.ctx.obj['MAX_MESSAGE_COUNT'])
+        receiver = QueueProcess.get_receiver(self)
+
+        self.custom_log_obj.log_info("Purge queue started. Wait for completion")
+        with receiver:
+            QueueProcess.__purge_queue_recursive(self, max_message_count, receiver)
+
+        self.custom_log_obj.log_info("Purge queue completed")
+
+    def __purge_queue_recursive(self,  max_message_count, receiver):
+
+        received_msgs = receiver.receive_messages(max_message_count=max_message_count, max_wait_time=5)
+        len_received_msgs = len(received_msgs)
+        for msg in received_msgs:
+            if self.ctx.obj['LOG_PATH'] is not None:
+                QueueProcess.log_message(self, msg)
+            receiver.complete_message(msg)
+
+        if len_received_msgs is not None and len_received_msgs == max_message_count:
+            QueueProcess.__purge_queue_recursive(self, max_message_count, receiver)
+
