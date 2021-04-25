@@ -59,7 +59,7 @@ def peek_messages(ctx, max_message_count, get_queue_properties, dead_letter, pre
 @click.option('--max_message_count', '-mc', required=False, default=None, help="Max message count")
 def purge_queue(ctx, queue_name, confirm, dead_letter, max_message_count):
     """
-            :   Peek messages from queue.
+            :   Purge all messages from queue.
     """
 
     if confirm.lower() == "confirm":
