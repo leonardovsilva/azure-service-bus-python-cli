@@ -106,7 +106,6 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         self.custom_log_obj.log_info("Purge queue completed")
 
     def __purge_queue_recursive(self,  max_message_count, receiver):
-
         received_msgs = receiver.receive_messages(max_message_count=max_message_count, max_wait_time=5)
         len_received_msgs = len(received_msgs)
         for msg in received_msgs:
