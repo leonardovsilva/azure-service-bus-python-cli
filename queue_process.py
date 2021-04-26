@@ -1,8 +1,5 @@
-import json
-
 from azure.core.exceptions import AzureError
 import service_bus_base
-import service_bus_custom_encoder
 
 
 class QueueProcess(service_bus_base.ServiceBusBase):
@@ -78,23 +75,6 @@ class QueueProcess(service_bus_base.ServiceBusBase):
             receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'])
 
         return receiver
-
-    def log_message_pretty(self, msg):
-        self.custom_log_obj.log_info("%s %s" % ('Message encoded size: ', msg.message.get_message_encoded_size(),))
-        json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
-        json_obj = json.loads(json_str)
-        json_obj["application_properties"] = json.loads(json_obj["application_properties"].replace("b'", "'").replace("'", '"').replace("None", '""'))
-        try:
-            json_obj["message"] = json.loads(json_obj["message"])
-        except Exception:
-            pass
-        json_str = json.dumps(json_obj, indent=4)
-        self.custom_log_obj.log_info(json_str)
-
-    def log_message(self, msg):
-        self.custom_log_obj.log_info("%s %s" % ('Message encoded size: ', msg.message.get_message_encoded_size(),))
-        json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
-        self.custom_log_obj.log_info(json_str.replace("\\", ""))
 
     def purge_queue(self):
         receiver = QueueProcess.get_receiver(self)

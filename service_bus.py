@@ -12,7 +12,7 @@ from queue_process import QueueProcess
 @click.option('--subscription_name', '-sn', required=False, help="Name of the message bus subscription")
 @click.option('--log_path', '-l', required=False, default=None, type=click.Path(exists=True), help="Path to log console outputs")
 def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path):
-    group_commands = ['queue', 'topic']
+    group_commands = ['peek_queue', 'purge_queue']
     """
         serviceBusPythonExplorer is a command line tool that helps management Azure Service Bus.\n
           example: python service_bus.py peek_queue -n [queue_name]

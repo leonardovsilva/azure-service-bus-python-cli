@@ -1,6 +1,9 @@
+import json
 import os
 import custom_log
 from azure.servicebus import ServiceBusClient, management, ServiceBusSubQueue
+
+import service_bus_custom_encoder
 
 
 class ServiceBusBase:
@@ -44,3 +47,20 @@ class ServiceBusBase:
         for attr in dir(obj):
             if hasattr(obj, attr):
                 print("obj.%s = %s" % (attr, getattr(obj, attr)))
+
+    def log_message_pretty(self, msg):
+        self.custom_log_obj.log_info("%s %s" % ('Message encoded size: ', msg.message.get_message_encoded_size(),))
+        json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
+        json_obj = json.loads(json_str)
+        json_obj["application_properties"] = json.loads(json_obj["application_properties"].replace("b'", "'").replace("'", '"').replace("None", '""'))
+        try:
+            json_obj["message"] = json.loads(json_obj["message"])
+        except Exception:
+            pass
+        json_str = json.dumps(json_obj, indent=4)
+        self.custom_log_obj.log_info(json_str)
+
+    def log_message(self, msg):
+        self.custom_log_obj.log_info("%s %s" % ('Message encoded size: ', msg.message.get_message_encoded_size(),))
+        json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
+        self.custom_log_obj.log_info(json_str.replace("\\", ""))
