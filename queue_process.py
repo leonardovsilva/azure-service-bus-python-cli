@@ -80,6 +80,7 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         receiver = QueueProcess.get_receiver(self)
 
         self.custom_log_obj.log_info("Purge queue started. Wait for completion")
+
         with receiver:
             QueueProcess.__purge_queue_recursive(self, self.ctx.obj['MAX_MESSAGE_COUNT'], receiver)
 
@@ -91,7 +92,10 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         for msg in received_msgs:
             if self.ctx.obj['LOG_PATH'] is not None:
                 QueueProcess.log_message(self, msg)
-            receiver.complete_message(msg)
+            if self.ctx.obj['TO_DEAD_LETTER'] and not self.ctx.obj['DEAD_LETTER']:
+                receiver.dead_letter_message(msg)
+            else:
+                receiver.complete_message(msg)
 
         if len_received_msgs is not None and len_received_msgs == max_message_count:
             QueueProcess.__purge_queue_recursive(self, max_message_count, receiver)

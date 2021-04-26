@@ -59,7 +59,8 @@ def peek_messages(ctx, max_message_count, pages, get_queue_properties, dead_lett
 @click.option('--confirm', prompt='Please type the word [confirm]')
 @click.option('--dead_letter', '-dl', is_flag=True, help="Purge dead letter messages")
 @click.option('--max_message_count', '-mc', required=False, default=50, help="Max message count. Default is 50")
-def purge_queue(ctx, queue_name, confirm, dead_letter, max_message_count):
+@click.option('--to_dead_letter', is_flag=True, help="Sends messages to dead_letter")
+def purge_queue(ctx, queue_name, confirm, dead_letter, max_message_count, to_dead_letter):
     """
             :   Purge all messages from queue.
     """
@@ -67,6 +68,8 @@ def purge_queue(ctx, queue_name, confirm, dead_letter, max_message_count):
     if confirm.lower() == "confirm":
         ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
         ctx.obj['DEAD_LETTER'] = dead_letter
+        ctx.obj['TO_DEAD_LETTER'] = to_dead_letter
+        print('TO_DEAD_LETTER')
         ctx.obj['QUEUE_NAME'] = queue_name
         queue_process_obj = QueueProcess(ctx)
         queue_process_obj.purge_queue()
