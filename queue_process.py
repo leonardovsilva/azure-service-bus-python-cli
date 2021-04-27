@@ -1,4 +1,6 @@
 from azure.core.exceptions import AzureError
+from azure.servicebus import ServiceBusReceiver
+
 import service_bus_base
 
 
@@ -68,35 +70,49 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         except AzureError:
             self.custom_log_obj.log_info("Not authorized or invalid request to obtaining  queue runtime properties")
 
-    def get_receiver(self):
+    def get_receiver(self) -> ServiceBusReceiver:
         if self.ctx.obj['DEAD_LETTER']:
-            receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'], sub_queue=self.DEAD_LETTER)
+            receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
+                                                                  sub_queue=self.DEAD_LETTER)
         else:
             receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'])
 
         return receiver
 
-    def purge_queue(self):
-        receiver = QueueProcess.get_receiver(self)
+    def get_receiver_mode(self, receive_mode: str) -> ServiceBusReceiver:
+        if self.ctx.obj['DEAD_LETTER']:
+            receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
+                                                                  sub_queue=self.DEAD_LETTER, receive_mode=receive_mode)
+        else:
+            receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
+                                                                  receive_mode=receive_mode)
 
+        return receiver
+
+    def purge_queue(self):
         self.custom_log_obj.log_info("Purge queue started. Wait for completion")
 
-        with receiver:
-            QueueProcess.__purge_queue_recursive(self, self.ctx.obj['MAX_MESSAGE_COUNT'], receiver)
+        QueueProcess.__purge_queue_recursive(self, self.ctx.obj['MAX_MESSAGE_COUNT'])
 
         self.custom_log_obj.log_info("Purge queue completed")
 
-    def __purge_queue_recursive(self,  max_message_count, receiver):
-        received_msgs = receiver.receive_messages(max_message_count=max_message_count, max_wait_time=5)
-        len_received_msgs = len(received_msgs)
-        for msg in received_msgs:
-            if self.ctx.obj['LOG_PATH'] is not None:
-                QueueProcess.log_message(self, msg)
-            if self.ctx.obj['TO_DEAD_LETTER'] and not self.ctx.obj['DEAD_LETTER']:
-                receiver.dead_letter_message(msg)
-            else:
-                receiver.complete_message(msg)
+    def __purge_queue_recursive(self,  max_message_count):
+        if self.ctx.obj['TO_DEAD_LETTER']:
+            receiver = QueueProcess.get_receiver(self)
+        else:
+            receiver = QueueProcess.get_receiver_mode(self, self.ServiceBusReceiveMode.RECEIVE_AND_DELETE)
 
+        with receiver:
+            received_msgs = receiver.receive_messages(max_message_count=max_message_count, max_wait_time=5)
+            len_received_msgs = len(received_msgs)
+            for msg in received_msgs:
+                if self.ctx.obj['LOG_PATH'] is not None:
+                    QueueProcess.log_message(self, msg)
+                if self.ctx.obj['TO_DEAD_LETTER'] and not self.ctx.obj['DEAD_LETTER']:
+                    receiver.dead_letter_message(msg)
+
+        print(len_received_msgs)
+        print(max_message_count)
         if len_received_msgs is not None and len_received_msgs == max_message_count:
-            QueueProcess.__purge_queue_recursive(self, max_message_count, receiver)
+            QueueProcess.__purge_queue_recursive(self, max_message_count)
 

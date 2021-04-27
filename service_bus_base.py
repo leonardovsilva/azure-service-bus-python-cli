@@ -1,7 +1,7 @@
 import json
 import os
 import custom_log
-from azure.servicebus import ServiceBusClient, management, ServiceBusSubQueue
+from azure.servicebus import ServiceBusClient, management, ServiceBusSubQueue, ServiceBusReceiveMode
 
 import service_bus_custom_encoder
 
@@ -21,6 +21,7 @@ class ServiceBusBase:
         self.DEAD_LETTER = ServiceBusSubQueue.DEAD_LETTER
 
         ServiceBusBase.init_variables(self)
+        self.ServiceBusReceiveMode = ServiceBusReceiveMode
 
     def init_variables(self):
 
