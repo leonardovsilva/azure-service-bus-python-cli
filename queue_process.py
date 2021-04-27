@@ -111,8 +111,6 @@ class QueueProcess(service_bus_base.ServiceBusBase):
                 if self.ctx.obj['TO_DEAD_LETTER'] and not self.ctx.obj['DEAD_LETTER']:
                     receiver.dead_letter_message(msg)
 
-        print(len_received_msgs)
-        print(max_message_count)
         if len_received_msgs is not None and len_received_msgs == max_message_count:
             QueueProcess.__purge_queue_recursive(self, max_message_count)
 
