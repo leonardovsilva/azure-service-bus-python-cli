@@ -115,3 +115,4 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         if len_received_msgs is not None and len_received_msgs > 0:
             QueueProcess.__purge_recursive(self, max_message_count)
 
+
