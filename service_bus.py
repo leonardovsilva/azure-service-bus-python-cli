@@ -103,14 +103,16 @@ def peek_queue(ctx, max_message_count, pages, get_queue_properties, dead_letter,
 @click.pass_context
 @click.option('--max_message_count', '-mc', required=False, default=5, help="Max message count. Default is 5")
 @click.option('--pages', required=False, default=1, help="Number of pages to run. Default is 1")
+@click.option('--get_queue_properties', '-qp', is_flag=True, help="Get queue properties")
 @click.option('--dead_letter', '-dl', is_flag=True, help="Peek messages from dead letter")
 @click.option('--pretty', is_flag=True, help="Pretty json log messages")
-def peek_sub(ctx, max_message_count, pages, dead_letter, pretty):
+def peek_sub(ctx, max_message_count, pages, get_queue_properties, dead_letter, pretty):
     """
             :   Peek messages from subscription.
     """
     ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
     ctx.obj['PAGES'] = pages
+    ctx.obj['GET_QUEUE_PROPERTIES'] = get_queue_properties
     ctx.obj['DEAD_LETTER'] = dead_letter
     ctx.obj['PRETTY'] = pretty
 

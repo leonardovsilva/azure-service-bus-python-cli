@@ -1,3 +1,4 @@
+from azure.core.exceptions import AzureError
 from azure.servicebus import ServiceBusReceiver
 
 import service_bus_base
@@ -10,6 +11,9 @@ class TopicProcess(service_bus_base.ServiceBusBase):
 
     def spying_message(self):
         with self.service_bus_client:
+
+            if self.ctx.obj['GET_QUEUE_PROPERTIES']:
+                TopicProcess.get_sub_properties(self)
 
             receiver = TopicProcess.get_receiver(self)
 
@@ -30,6 +34,37 @@ class TopicProcess(service_bus_base.ServiceBusBase):
                         else:
                             TopicProcess.log_message(self, msg)
                         sequence_number = msg.sequence_number
+
+    def get_sub_properties(self):
+        self.custom_log_obj.log_info("-- Get Subscription Runtime Properties")
+        try:
+            get_sub_runtime_properties = self.servicebus_mgmt_client.get_subscription_runtime_properties(
+                topic_name=self.ctx.obj['TOPIC_NAME'], subscription_name=self.ctx.obj['SUBSCRIPTION_NAME'])
+
+            get_sub_properties = self.servicebus_mgmt_client.get_subscription(
+                topic_name=self.ctx.obj['TOPIC_NAME'], subscription_name=self.ctx.obj['SUBSCRIPTION_NAME'])
+
+            self.custom_log_obj.log_info("-- Subscription Information")
+            self.custom_log_obj.log_info("%s %s" % ('Status:', get_sub_properties.status,))
+            self.custom_log_obj.log_info("%s %s" % ('Queue name:', get_sub_runtime_properties.name,))
+            self.custom_log_obj.log_info("%s %s" % ('Forward to: ', get_sub_properties.forward_to,))
+            self.custom_log_obj.log_info("%s %s" % ('Forward to dead lettered: ', get_sub_properties.forward_dead_lettered_messages_to,))
+            self.custom_log_obj.log_info("%s %s" % ('Created at utc: ', get_sub_runtime_properties.created_at_utc,))
+            self.custom_log_obj.log_info("%s %s" % ('Updated at utc: ', get_sub_runtime_properties.updated_at_utc,))
+            self.custom_log_obj.log_info("%s %s" % ('Accessed at utc: ', get_sub_runtime_properties.accessed_at_utc,))
+            self.custom_log_obj.log_info(
+                "%s %s" % ('Active message count:', get_sub_runtime_properties.active_message_count,))
+            self.custom_log_obj.log_info(
+                "%s %s" % ('Dead letter message count:', get_sub_runtime_properties.dead_letter_message_count,))
+            self.custom_log_obj.log_info(
+                "%s %s" % ('Transfer message count:', get_sub_runtime_properties.transfer_message_count,))
+            self.custom_log_obj.log_info("%s %s" % (
+            'Transfer DLQ message count:', get_sub_runtime_properties.transfer_dead_letter_message_count,))
+            self.custom_log_obj.log_info(
+                "%s %s" % ('Message count:', get_sub_runtime_properties.total_message_count,))
+
+        except AzureError:
+            self.custom_log_obj.log_info("Not authorized or invalid request to obtaining subscription runtime properties")
 
     def purge(self):
         self.custom_log_obj.log_info("Purge subscription started. Wait for completion")
@@ -54,7 +89,6 @@ class TopicProcess(service_bus_base.ServiceBusBase):
                     receiver.dead_letter_message(msg)
 
         self.custom_log_obj.log_info("%s %s" % ('Length received_msgs: ', len_received_msgs,))
-        self.custom_log_obj.log_info("%s %s" % ('Max message count: ', max_message_count,))
 
         if len_received_msgs is not None and len_received_msgs > 0:
             TopicProcess.__purge_recursive(self, max_message_count)

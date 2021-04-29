@@ -66,7 +66,7 @@ class QueueProcess(service_bus_base.ServiceBusBase):
             self.custom_log_obj.log_info("%s %s" % ('Message count:', get_queue_runtime_properties.total_message_count,))
 
         except AzureError:
-            self.custom_log_obj.log_info("Not authorized or invalid request to obtaining  queue runtime properties")
+            self.custom_log_obj.log_info("Not authorized or invalid request to obtaining queue runtime properties")
 
     def get_receiver(self) -> ServiceBusReceiver:
         if self.ctx.obj['DEAD_LETTER']:
@@ -110,7 +110,6 @@ class QueueProcess(service_bus_base.ServiceBusBase):
                     receiver.dead_letter_message(msg)
 
         self.custom_log_obj.log_info("%s %s" % ('Length received_msgs: ', len_received_msgs,))
-        self.custom_log_obj.log_info("%s %s" % ('Max message count: ', max_message_count,))
 
         if len_received_msgs is not None and len_received_msgs > 0:
             QueueProcess.__purge_recursive(self, max_message_count)
