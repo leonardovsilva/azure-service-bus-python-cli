@@ -10,7 +10,6 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         service_bus_base.ServiceBusBase.__init__(self, ctx)
 
     def spying_message_queue(self):
-
         with self.service_bus_client:
 
             if self.ctx.obj['GET_QUEUE_PROPERTIES']:
@@ -35,7 +34,6 @@ class QueueProcess(service_bus_base.ServiceBusBase):
                         else:
                             QueueProcess.log_message(self, msg)
                         sequence_number = msg.sequence_number
-                        print(sequence_number)
 
     def get_queue_properties(self):
         self.custom_log_obj.log_info("-- Get Queue Runtime Properties")
@@ -89,14 +87,14 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
         return receiver
 
-    def purge_queue(self):
+    def purge(self):
         self.custom_log_obj.log_info("Purge queue started. Wait for completion")
 
-        QueueProcess.__purge_queue_recursive(self, self.ctx.obj['MAX_MESSAGE_COUNT'])
+        QueueProcess.__purge_recursive(self, self.ctx.obj['MAX_MESSAGE_COUNT'])
 
         self.custom_log_obj.log_info("Purge queue completed")
 
-    def __purge_queue_recursive(self,  max_message_count):
+    def __purge_recursive(self,  max_message_count):
         if self.ctx.obj['TO_DEAD_LETTER']:
             receiver = QueueProcess.get_receiver(self)
         else:
@@ -111,8 +109,9 @@ class QueueProcess(service_bus_base.ServiceBusBase):
                 if self.ctx.obj['TO_DEAD_LETTER'] and not self.ctx.obj['DEAD_LETTER']:
                     receiver.dead_letter_message(msg)
 
-        print(len_received_msgs)
-        print(max_message_count)
-        if len_received_msgs is not None and len_received_msgs == max_message_count:
-            QueueProcess.__purge_queue_recursive(self, max_message_count)
+        self.custom_log_obj.log_info("%s %s" % ('Length received_msgs: ', len_received_msgs,))
+        self.custom_log_obj.log_info("%s %s" % ('Max message count: ', max_message_count,))
+
+        if len_received_msgs is not None and len_received_msgs > 0:
+            QueueProcess.__purge_recursive(self, max_message_count)
 

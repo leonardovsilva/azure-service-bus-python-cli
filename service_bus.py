@@ -1,6 +1,9 @@
 import click
 import colorama
+from colorama import Style
+
 from queue_process import QueueProcess
+from topic_process import TopicProcess
 
 
 @click.group(invoke_without_command=True)
@@ -28,6 +31,15 @@ def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path):
     ctx.obj['TOPIC_NAME'] = topic_name
     ctx.obj['SUBSCRIPTION_NAME'] = subscription_name
     ctx.obj['LOG_PATH'] = log_path
+
+    colorama.init()
+    if queue_name is not None:
+        print(colorama.Fore.LIGHTYELLOW_EX + queue_name)
+    if topic_name is not None:
+        print(colorama.Fore.LIGHTYELLOW_EX + topic_name)
+    if subscription_name is not None:
+        print(colorama.Fore.LIGHTYELLOW_EX + subscription_name)
+    print(Style.RESET_ALL)
     #config_obj = config.Config()
     #config_obj.init()
 
@@ -37,9 +49,9 @@ def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path):
 @click.option('--max_message_count', '-mc', required=False, default=5, help="Max message count. Default is 5")
 @click.option('--pages', required=False, default=1, help="Number of pages to run. Default is 1")
 @click.option('--get_queue_properties', '-qp', is_flag=True, help="Get queue properties")
-@click.option('--dead_letter', '-dl', is_flag=True, help="Peek messages from dead letter queue")
+@click.option('--dead_letter', '-dl', is_flag=True, help="Peek messages from dead letter")
 @click.option('--pretty', is_flag=True, help="Pretty json log messages")
-def peek_messages(ctx, max_message_count, pages, get_queue_properties, dead_letter, pretty):
+def peek_queue(ctx, max_message_count, pages, get_queue_properties, dead_letter, pretty):
     """
             :   Peek messages from queue.
     """
@@ -53,14 +65,32 @@ def peek_messages(ctx, max_message_count, pages, get_queue_properties, dead_lett
     queue_process_obj.spying_message_queue()
 
 
+@main.command('peek_sub')
+@click.pass_context
+@click.option('--max_message_count', '-mc', required=False, default=5, help="Max message count. Default is 5")
+@click.option('--pages', required=False, default=1, help="Number of pages to run. Default is 1")
+@click.option('--dead_letter', '-dl', is_flag=True, help="Peek messages from dead letter")
+@click.option('--pretty', is_flag=True, help="Pretty json log messages")
+def peek_sub(ctx, max_message_count, pages, dead_letter, pretty):
+    """
+            :   Peek messages from subscription.
+    """
+    ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
+    ctx.obj['PAGES'] = pages
+    ctx.obj['DEAD_LETTER'] = dead_letter
+    ctx.obj['PRETTY'] = pretty
+
+    queue_process_obj = TopicProcess(ctx)
+    queue_process_obj.spying_message()
+
+
 @main.command('purge_queue')
 @click.pass_context
-@click.option('--queue_name', '-qn', required=True, help="Name of the message bus queue")
 @click.option('--confirm', prompt='Please type the word [confirm]')
 @click.option('--dead_letter', '-dl', is_flag=True, help="Purge dead letter messages")
 @click.option('--max_message_count', '-mc', required=False, default=50, help="Max message count. Default is 50")
 @click.option('--to_dead_letter', is_flag=True, help="Sends messages to dead_letter")
-def purge_queue(ctx, queue_name, confirm, dead_letter, max_message_count, to_dead_letter):
+def purge_queue(ctx, confirm, dead_letter, max_message_count, to_dead_letter):
     """
             :   Purge all messages from queue.
     """
@@ -69,10 +99,30 @@ def purge_queue(ctx, queue_name, confirm, dead_letter, max_message_count, to_dea
         ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
         ctx.obj['DEAD_LETTER'] = dead_letter
         ctx.obj['TO_DEAD_LETTER'] = to_dead_letter
-        print('TO_DEAD_LETTER')
-        ctx.obj['QUEUE_NAME'] = queue_name
         queue_process_obj = QueueProcess(ctx)
-        queue_process_obj.purge_queue()
+        queue_process_obj.purge()
+    else:
+        colorama.init()
+        print(colorama.Fore.LIGHTRED_EX + 'Invalid word the operation will not proceed')
+
+
+@main.command('purge_sub')
+@click.pass_context
+@click.option('--confirm', prompt='Please type the word [confirm]')
+@click.option('--dead_letter', '-dl', is_flag=True, help="Purge dead letter messages")
+@click.option('--max_message_count', '-mc', required=False, default=50, help="Max message count. Default is 50")
+@click.option('--to_dead_letter', is_flag=True, help="Sends messages to dead_letter")
+def purge_subscription(ctx, confirm, dead_letter, max_message_count, to_dead_letter):
+    """
+            :   Purge all messages from subscription
+    """
+
+    if confirm.lower() == "confirm":
+        ctx.obj['MAX_MESSAGE_COUNT'] = max_message_count
+        ctx.obj['DEAD_LETTER'] = dead_letter
+        ctx.obj['TO_DEAD_LETTER'] = to_dead_letter
+        topic_process_obj = TopicProcess(ctx)
+        topic_process_obj.purge()
     else:
         colorama.init()
         print(colorama.Fore.LIGHTRED_EX + 'Invalid word the operation will not proceed')
