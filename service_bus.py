@@ -2,6 +2,7 @@ import click
 import colorama
 from colorama import Style
 
+import config
 from queue_process import QueueProcess
 from topic_process import TopicProcess
 
@@ -32,16 +33,49 @@ def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path):
     ctx.obj['SUBSCRIPTION_NAME'] = subscription_name
     ctx.obj['LOG_PATH'] = log_path
 
-    colorama.init()
+    set_console_color()
+
     if queue_name is not None:
-        print(colorama.Fore.LIGHTYELLOW_EX + queue_name)
+        print(queue_name)
     if topic_name is not None:
-        print(colorama.Fore.LIGHTYELLOW_EX + topic_name)
+        print(topic_name)
     if subscription_name is not None:
-        print(colorama.Fore.LIGHTYELLOW_EX + subscription_name)
-    print(Style.RESET_ALL)
+        print(subscription_name)
     #config_obj = config.Config()
     #config_obj.init()
+
+
+def set_console_color():
+    config_obj = config.Config()
+    config_obj.init()
+
+    style = None
+    try:
+        style = config_obj.config_export['DEFAULT']['Style']
+    except Exception:
+        pass
+
+    if style == 'LIGHTYELLOW_EX':
+        colorama.init()
+        print(colorama.Fore.LIGHTYELLOW_EX)
+    elif style == 'LIGHTRED_EX':
+        colorama.init()
+        print(colorama.Fore.LIGHTRED_EX)
+    elif style == 'LIGHTMAGENTA_EX':
+        colorama.init()
+        print(colorama.Fore.LIGHTMAGENTA_EX)
+    elif style == 'LIGHTBLUE_EX':
+        colorama.init()
+        print(colorama.Fore.LIGHTBLUE_EX)
+    elif style == 'LIGHTCYAN_EX':
+        colorama.init()
+        print(colorama.Fore.LIGHTCYAN_EX)
+    elif style == 'LIGHTGREEN_EX':
+        colorama.init()
+        print(colorama.Fore.LIGHTGREEN_EX)
+    elif style == 'LIGHTWHITE_EX':
+        colorama.init()
+        print(colorama.Fore.LIGHTWHITE_EX)
 
 
 @main.command('peek_queue')
