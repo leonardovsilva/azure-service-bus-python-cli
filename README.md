@@ -37,7 +37,7 @@ python service_bus.py peek_queue
 
 peek_queue - Options
 
---pretty - :sparkles: Make pretty JSON in the console
+--pretty Make pretty JSON in the console :sparkles:
 
 ```console
 python service_bus.py peek_queue --pretty
