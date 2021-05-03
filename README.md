@@ -11,7 +11,7 @@ Table of contents
 ### Features
 
 - [x] Send messages to a service bus queue
-- [ ]  Send messages to a service bus subscription
+- [ ] Send messages to a service bus subscription
 - [x] Peek messages from queue
 - [x] Peek messages from subscription
 - [x] Purge all messages from queue
@@ -19,11 +19,17 @@ Table of contents
 
 <h3 id="usage">Usage examples</h3>
 
-Help command
+Help command - Commands and options available
 
 ```console
 python service_bus.py --help  
 python service_bus.py peek_queue --help 
+```
+
+Peek queue command - Checks messages in the queue without receiving messages
+
+```console
+python service_bus.py peek_queue
 ```
 
 ### Author
