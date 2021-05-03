@@ -16,6 +16,9 @@ Table of contents
 - [x] Peek messages from subscription
 - [x] Purge all messages from queue
 - [x] Purge all messages from subscription
+- [ ] Search engine and sorting
+- [ ] Topic, subscription and queue management
+- [ ] Rescheduling messages
 
 <h3 id="usage">Usage examples</h3>
 
