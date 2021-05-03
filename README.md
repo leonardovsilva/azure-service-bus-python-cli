@@ -19,8 +19,9 @@ Table of contents
 
 <h3 id="usage">Usage examples</h3>
 
+```console
 python service_bus.py --help  
-
+```
 Usage: service_bus.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -38,8 +39,9 @@ Commands:
   purge_queue    : Purge all messages from queue.
   purge_sub      : Purge all messages from subscription
 
+```console
 python service_bus.py peek_queue --help 
-
+```
 Usage: service_bus.py peek_queue [OPTIONS]
 
   :   Peek messages from queue.
