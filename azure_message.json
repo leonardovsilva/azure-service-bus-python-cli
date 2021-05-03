@@ -1,0 +1,20 @@
+[
+  {
+    "application_properties": {
+      "a": "b",
+      "c": "d"
+    },
+    "session_id": "",
+    "message_id": "",
+    "scheduled_enqueue_time_utc": "2021-05-04T11:10:00Z",
+    "time_to_live": "2021-05-04T11:10:00Z",
+    "content_type": "",
+    "correlation_id": "",
+    "subject": "",
+    "partition_key": "",
+    "to": "",
+    "reply_to": "",
+    "reply_to_session_id": "",
+    "message": "Teste de mensagem envio lib"
+  }
+]

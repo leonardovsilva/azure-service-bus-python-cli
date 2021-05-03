@@ -1,8 +1,9 @@
+import json
+
 import click
 import colorama
-from colorama import Style
-
 import config
+from message_parser import ServiceBusMessageParser
 from queue_process import QueueProcess
 from topic_process import TopicProcess
 
@@ -164,6 +165,26 @@ def purge_subscription(ctx, confirm, dead_letter, max_message_count, to_dead_let
         print(colorama.Fore.LIGHTRED_EX + 'Invalid word the operation will not proceed')
 
 
+@main.command('message_queue')
+@click.pass_context
+@click.option('--input_file', '-i', type=click.File('rb'), required=True, help="Directory to get message file")
+def message_queue(ctx, input_file):
+    """
+            :   Send messages to a service bus queue
+    """
+
+    queue_process_obj = QueueProcess(ctx)
+    queue_process_obj.message(input_file)
+
+
 if __name__ == '__main__':
+    '''input_file = open("azure_message.json", "rb")
+    json_messages = json.load(input_file)
+
+    for message in json_messages:
+        message_parser = ServiceBusMessageParser(**message)
+        message_obj = message_parser.get_service_bus_message()'''
+
+
     main()
 

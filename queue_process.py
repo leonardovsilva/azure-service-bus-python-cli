@@ -1,7 +1,10 @@
+import json
+
 from azure.core.exceptions import AzureError
-from azure.servicebus import ServiceBusReceiver
+from azure.servicebus import ServiceBusReceiver, ServiceBusSender
 
 import service_bus_base
+from message_parser import ServiceBusMessageParser
 
 
 class QueueProcess(service_bus_base.ServiceBusBase):
@@ -87,6 +90,9 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
         return receiver
 
+    def get_sender(self) -> ServiceBusSender:
+        return self.service_bus_client.get_queue_sender(queue_name=self.ctx.obj['QUEUE_NAME'])
+
     def purge(self):
         self.custom_log_obj.log_info("Purge queue started. Wait for completion")
 
@@ -113,5 +119,24 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
         if len_received_msgs is not None and len_received_msgs > 0:
             QueueProcess.__purge_recursive(self, max_message_count)
+
+    def message(self, input_file):
+        json_messages = json.load(input_file)
+
+        with self.service_bus_client:
+            sender = self.get_sender()
+            with sender:
+                batch_message = sender.create_message_batch()
+                for message in json_messages:
+                    message_parser = ServiceBusMessageParser(**message)
+                    message_obj = message_parser.get_service_bus_message()
+                    try:
+                        batch_message.add_message(message_obj)
+                    except ValueError:
+                        # ServiceBusMessageBatch object reaches max_size.
+                        # New ServiceBusMessageBatch object can be created here to send more data.
+                        pass
+                    sender.send_messages(batch_message)
+
 
 

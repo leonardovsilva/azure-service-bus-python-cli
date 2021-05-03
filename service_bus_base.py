@@ -22,7 +22,7 @@ class ServiceBusBase:
         ServiceBusBase.init_conf(self)
         ServiceBusBase.init_variables(self)
 
-        self.service_bus_client = ServiceBusClient.from_connection_string(conn_str=self.CONNECTION_STR)
+        self.service_bus_client = ServiceBusClient.from_connection_string(conn_str=self.CONNECTION_STR, logging_enable=True)
         self.servicebus_mgmt_client = management.ServiceBusAdministrationClient.from_connection_string(conn_str=self.CONNECTION_STR)
         self.DEAD_LETTER = ServiceBusSubQueue.DEAD_LETTER
         self.ServiceBusReceiveMode = ServiceBusReceiveMode
