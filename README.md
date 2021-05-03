@@ -1,4 +1,14 @@
-Usage examples
+<h1 align="center">Python Service Bus Explorer</h1>
+
+<p align="center">🚀 Command line software to manage azure service bus service. Made in pyhton for cross-platform compatibility</p>
+
+Tabela de conteúdos
+=================
+<!--ts-->
+   * [Usage examples](#usage)
+<!--te-->
+
+<h3 id="usage">Usage examples</h3>
 
 python service_bus.py --help  
 
