@@ -58,5 +58,4 @@ Options:
 
 Made with ❤️ by Leonardo Viana Silva
 
-[![Linkedin Badge](https://img.shields.io/badge/-Leonardo-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/leonardo-viana-silva/](https://www.linkedin.com/in/leonardo-viana-silva/) 
-[![Gmail Badge](https://img.shields.io/badge/-leonardovsilva@gmail.com-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:leonardovsilva@gmail.com)](mailto:leonardovsilva@gmail.com)
+[![Linkedin Badge](https://img.shields.io/badge/-Leonardo-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/leonardo-viana-silva/)](https://www.linkedin.com/in/leonardo-viana-silva/)[![Gmail Badge](https://img.shields.io/badge/-leonardovsilva@gmail.com-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:leonardovsilva@gmail.com)](mailto:leonardovsilva@gmail.com)
