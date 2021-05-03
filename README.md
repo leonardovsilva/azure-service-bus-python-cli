@@ -2,7 +2,7 @@
 
 <p align="center">🚀 Command line software to manage azure service bus service. Made in pyhton for cross-platform compatibility</p>
 
-Tabela de conteúdos
+Table of contents
 =================
 <!--ts-->
    * [Usage examples](#usage)
