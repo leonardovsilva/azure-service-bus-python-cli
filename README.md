@@ -35,6 +35,15 @@ Peek queue command - Checks messages in the queue without receiving messages
 python service_bus.py peek_queue
 ```
 
+peek_queue - Options
+
+--pretty - :sparkles: Make pretty JSON in the console
+
+```console
+python service_bus.py peek_queue --pretty
+```
+
+
 ### Author
 ---
 
