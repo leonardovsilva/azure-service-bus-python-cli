@@ -1,6 +1,10 @@
 <h1 align="center">Python Service Bus Explorer</h1>
 
 <p align="center">🚀 Command line software to manage azure service bus service. Made in pyhton for cross-platform compatibility</p>
+<p align="center">
+![Screenshot from 2021-05-06 13-33-12](https://user-images.githubusercontent.com/3792091/117333961-dac6da00-ae6f-11eb-8bb6-44ad8cf55431.png)
+![Screenshot from 2021-05-06 13-30-00](https://user-images.githubusercontent.com/3792091/117333977-ddc1ca80-ae6f-11eb-9e05-0b084cf64f3c.png)
+</p>
 
 Table of contents
 =================
