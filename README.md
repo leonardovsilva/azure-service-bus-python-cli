@@ -2,7 +2,7 @@
 
 <p align="center">🚀 Command line software to manage azure service bus service. Made in pyhton for cross-platform compatibility</p>
 
-![CLI usage](https://user-images.githubusercontent.com/3792091/117333961-dac6da00-ae6f-11eb-8bb6-44ad8cf55431.png)
+<p align="center"> <img src="https://user-images.githubusercontent.com/3792091/117333961-dac6da00-ae6f-11eb-8bb6-44ad8cf55431.png" alt="CLI usage"></p>
 
 
 Table of contents
