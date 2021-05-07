@@ -178,13 +178,5 @@ def message_queue(ctx, input_file):
 
 
 if __name__ == '__main__':
-    '''input_file = open("azure_message.json", "rb")
-    json_messages = json.load(input_file)
-
-    for message in json_messages:
-        message_parser = ServiceBusMessageParser(**message)
-        message_obj = message_parser.get_service_bus_message()'''
-
-
     main()
 

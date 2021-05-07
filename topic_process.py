@@ -84,6 +84,7 @@ class TopicProcess(service_bus_base.ServiceBusBase):
             len_received_msgs = len(received_msgs)
             for msg in received_msgs:
                 if self.ctx.obj['LOG_PATH'] is not None:
+                    receiver.complete_message(msg)
                     TopicProcess.log_message(self, msg)
                 if self.ctx.obj['TO_DEAD_LETTER'] and not self.ctx.obj['DEAD_LETTER']:
                     receiver.dead_letter_message(msg)
