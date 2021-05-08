@@ -1,16 +1,20 @@
-### Python Service Bus Explorer
+# Python Service Bus Explorer
 
 🚀 Command line software to manage azure service bus service. Made in pyhton for cross-platform compatibility.
 
 ![CLI usage](https://user-images.githubusercontent.com/3792091/117333961-dac6da00-ae6f-11eb-8bb6-44ad8cf55431.png)
 
-### Table of contents
+# Table of contents
 
 <!--ts-->
    * [Usage examples](#usage)
+   * [Root options](#root-options) 
+   * [Environment variables](#environment-variables)
+   * [Important](#important)
+   * [Author](#author)
 <!--te-->
 
-### Features
+# Features
 
 - [x] Send messages to a service bus queue
 - [ ] Send messages to a service bus subscription
@@ -24,7 +28,7 @@
 - [ ] Receive messages from queue
 - [ ] Receive messages from subscription
 
-<h3 id="usage">Usage examples</h3>
+<h1><a href="#usage">Usage examples</a></h1>
 
 ## Help command
 
@@ -97,7 +101,7 @@ purge_sub - Options
 
 dl or --dead_letter:  from the dead letter
 
-## Root options
+<h1><a href="#root-options">Root options</a></h1>
 
 - --queue_name or, -qn: Name of the message bus queue (optional)
 - --topic_name or -tn: Name of the message bus topic (optional)
@@ -111,19 +115,18 @@ python service_bus.py -l system_path peek_sub
 There is a configuration file at the root of the project where it is possible to add the service 
 bus settings more easily. It can also be configured via environment.
 
-## Environment variables
+<h1><a href="#environment-variables">Environment variables</a></h1>
 
 - SERVICE_BUS_CONNECTION_STR
 - SERVICE_BUS_QUEUE_NAME
 - SERVICE_BUS_TOPIC_NAME
 - SERVICE_BUS_SUBSCRIPTION_NAME
 
-## Important
+<h1><a href="#important">Important</a></h1>
 
 There is a variety of options see use --help to view other.
 
-### Author
----
+<h1><a href="#author">Author</a></h1>
 
 Made with ❤️ by Leonardo Viana Silva
 
