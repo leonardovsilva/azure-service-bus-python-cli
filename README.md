@@ -14,7 +14,7 @@
    * [Author](#author)
 <!--te-->
 
-# Features
+# Features :running:
 
 - [x] Send messages to a service bus queue
 - [ ] Send messages to a service bus subscription
