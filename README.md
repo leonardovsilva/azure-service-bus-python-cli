@@ -55,7 +55,7 @@ peek_queue - Options
 python service_bus.py peek_queue --pretty
 ```
 
-dl or --dead_letter:  Peek messages from the dead letter
+dl or --dead_letter:  Peek messages from the dead letter :ghost:
 
 ## Peek subscription command
 
@@ -75,11 +75,11 @@ python service_bus.py purge_queue
 
 purge_queue - Options
 
-dl or --dead_letter:  from the dead letter
+dl or --dead_letter:  from the dead letter :ghost:
 
 ## Purge subscription command
 
-Purge all messages from the subscription.
+Purge all messages from the subscription. :exclamation:
 
 ```console
 python service_bus.py purge_sub
@@ -87,7 +87,7 @@ python service_bus.py purge_sub
 
 purge_sub - Options
 
-dl or --dead_letter:  from the dead letter
+dl or --dead_letter:  from the dead letter :ghost:
 
 ## Send messages command (queue)
 
@@ -99,7 +99,7 @@ python service_bus.py message_queue -i file
 
 purge_sub - Options
 
-dl or --dead_letter:  from the dead letter
+dl or --dead_letter:  from the dead letter :ghost:
 
 <h1><a href="#root-options">Root options</a></h1>
 
