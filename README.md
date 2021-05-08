@@ -7,7 +7,7 @@
 # Table of contents
 
 <!--ts-->
-   * [Usage examples](#usage)
+   * [Usage examples](#usage-examples)
    * [Root options](#root-options) 
    * [Environment variables](#environment-variables)
    * [Important](#important)
@@ -28,7 +28,7 @@
 - [ ] Receive messages from queue
 - [ ] Receive messages from subscription
 
-<h1><a href="#usage">Usage examples</a></h1>
+<h1><a href="#usage-examples">Usage examples</a></h1>
 
 ## Help command
 
