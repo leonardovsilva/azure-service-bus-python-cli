@@ -1,6 +1,6 @@
 ### Python Service Bus Explorer
 
-🚀 Command line software to manage azure service bus service. Made in pyhton for cross-platform compatibility
+🚀 Command line software to manage azure service bus service. Made in pyhton for cross-platform compatibility.
 
 ![CLI usage](https://user-images.githubusercontent.com/3792091/117333961-dac6da00-ae6f-11eb-8bb6-44ad8cf55431.png)
 
@@ -21,17 +21,23 @@
 - [ ] Search engine and sorting
 - [ ] Topic, subscription and queue management
 - [ ] Rescheduling messages
+- [ ] Receive messages from queue
+- [ ] Receive messages from subscription
 
 <h3 id="usage">Usage examples</h3>
 
-Help command - Commands and options available
+## Help command
+
+Commands and options available.
 
 ```console
 python service_bus.py --help  
 python service_bus.py peek_queue --help 
 ```
 
-Peek queue command - Checks messages in the queue without receiving messages
+## Peek queue command
+
+Check messages in the queue without receiving messages.
 
 ```console
 python service_bus.py peek_queue
@@ -45,6 +51,76 @@ peek_queue - Options
 python service_bus.py peek_queue --pretty
 ```
 
+dl or --dead_letter:  Peek messages from the dead letter
+
+## Peek subscription command
+
+Check messages in the subscription without receiving messages.
+
+```console
+python service_bus.py peek_sub
+```
+
+## Purge queue command 
+
+Purge all messages from the queue.
+
+```console
+python service_bus.py purge_queue
+```
+
+purge_queue - Options
+
+dl or --dead_letter:  from the dead letter
+
+## Purge subscription command
+
+Purge all messages from the subscription.
+
+```console
+python service_bus.py purge_sub
+```
+
+purge_sub - Options
+
+dl or --dead_letter:  from the dead letter
+
+## Send messages command (queue)
+
+Send messages to a service bus queue using a json template. The model file is at the root of the project
+
+```console
+python service_bus.py message_queue -i file
+```
+
+purge_sub - Options
+
+dl or --dead_letter:  from the dead letter
+
+## Root options
+
+- --queue_name or, -qn: Name of the message bus queue (optional)
+- --topic_name or -tn: Name of the message bus topic (optional)
+- --subscription_name or -sn: Name of the message bus subscription (optional)
+- --log_path or -l: Path to generate file log console outputs (optional)
+
+```console
+python service_bus.py -l system_path peek_sub
+```
+
+There is a configuration file at the root of the project where it is possible to add the service 
+bus settings more easily. It can also be configured via environment.
+
+## Environment variables
+
+- SERVICE_BUS_CONNECTION_STR
+- SERVICE_BUS_QUEUE_NAME
+- SERVICE_BUS_TOPIC_NAME
+- SERVICE_BUS_SUBSCRIPTION_NAME
+
+## Important
+
+There is a variety of options see use --help to view other.
 
 ### Author
 ---
