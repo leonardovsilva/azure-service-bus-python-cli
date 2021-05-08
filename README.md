@@ -79,7 +79,7 @@ dl or --dead_letter:  from the dead letter :ghost:
 
 ## Purge subscription command
 
-Purge all messages from the subscription. :exclamation:
+Purge all messages from the subscription. :finnadie:
 
 ```console
 python service_bus.py purge_sub
@@ -122,7 +122,7 @@ bus settings more easily. It can also be configured via environment.
 - SERVICE_BUS_TOPIC_NAME
 - SERVICE_BUS_SUBSCRIPTION_NAME
 
-<h1><a href="#important">Important</a></h1>
+<h1><a href="#important">Important :exclamation:</a></h1>
 
 There is a variety of options see use --help to view other.
 
