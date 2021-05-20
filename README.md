@@ -89,17 +89,17 @@ purge_sub - Options
 
 dl or --dead_letter:  from the dead letter :ghost:
 
-## Send messages command (queue)
+## Send messages command
 
-Send messages to a service bus queue using a json template. The model file is at the root of the project
+Send messages to a service bus queue or topic using a json template. The model file is at the root of the project
 
 ```console
 python service_bus.py message_queue -i file
 ```
 
-purge_sub - Options
-
-dl or --dead_letter:  from the dead letter :ghost:
+```console
+python service_bus.py message_topic -i file
+```
 
 <h1><a href="#root-options">Root options</a></h1>
 
