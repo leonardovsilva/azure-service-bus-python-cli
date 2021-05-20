@@ -121,6 +121,7 @@ bus settings more easily. It can also be configured via environment.
 - SERVICE_BUS_QUEUE_NAME
 - SERVICE_BUS_TOPIC_NAME
 - SERVICE_BUS_SUBSCRIPTION_NAME
+- SERVICEBUS_CONF (Path of config file)
 
 <h1><a href="#important">Important :exclamation:</a></h1>
 
