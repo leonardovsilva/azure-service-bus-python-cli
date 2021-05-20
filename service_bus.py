@@ -177,6 +177,18 @@ def message_queue(ctx, input_file):
     queue_process_obj.message(input_file)
 
 
+@main.command('message_sub')
+@click.pass_context
+@click.option('--input_file', '-i', type=click.File('rb'), required=True, help="Directory to get message file")
+def message_subscription(ctx, input_file):
+    """
+            :   Send messages to a service bus queue
+    """
+
+    topic_process_obj = TopicProcess(ctx)
+    topic_process_obj.message(input_file)
+
+
 if __name__ == '__main__':
     main()
 

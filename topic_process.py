@@ -1,7 +1,10 @@
+import json
+
 from azure.core.exceptions import AzureError
-from azure.servicebus import ServiceBusReceiver
+from azure.servicebus import ServiceBusReceiver, ServiceBusSender, ServiceBusMessage
 
 import service_bus_base
+from message_parser import ServiceBusMessageParser
 
 
 class TopicProcess(service_bus_base.ServiceBusBase):
@@ -107,6 +110,9 @@ class TopicProcess(service_bus_base.ServiceBusBase):
 
         return receiver
 
+    def get_sender(self) -> ServiceBusSender:
+        return self.service_bus_client.get_topic_sender(topic_name=self.ctx.obj['TOPIC_NAME'])
+
     def get_receiver_mode(self, receive_mode: str) -> ServiceBusReceiver:
         if self.ctx.obj['DEAD_LETTER']:
             receiver = self.service_bus_client\
@@ -120,3 +126,27 @@ class TopicProcess(service_bus_base.ServiceBusBase):
                                            receive_mode=receive_mode)
 
         return receiver
+
+    def message(self, input_file):
+        json_messages = json.load(input_file)
+
+        with self.service_bus_client:
+            sender = self.get_sender()
+            with sender:
+                batch_message = sender.create_message_batch()
+                count = 0
+                for message in json_messages:
+                    message_parser = ServiceBusMessageParser(**message)
+                    message_obj = message_parser.get_service_bus_message()
+                    try:
+                        batch_message.add_message(message_obj)
+                        count += 1
+                    except ValueError:
+                        # ServiceBusMessageBatch object reaches max_size.
+                        # New ServiceBusMessageBatch object can be created here to send more data.
+                        pass
+
+                sender.send_messages(batch_message)
+                self.custom_log_obj.log_info("%s %s %s %s" % ('Messages sent. Size in bytes: ',
+                                                              batch_message.size_in_bytes, ', Count: ', count))
+

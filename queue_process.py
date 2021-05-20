@@ -128,16 +128,21 @@ class QueueProcess(service_bus_base.ServiceBusBase):
             sender = self.get_sender()
             with sender:
                 batch_message = sender.create_message_batch()
+                count = 0
+
                 for message in json_messages:
                     message_parser = ServiceBusMessageParser(**message)
                     message_obj = message_parser.get_service_bus_message()
                     try:
                         batch_message.add_message(message_obj)
+                        count += 1
                     except ValueError:
                         # ServiceBusMessageBatch object reaches max_size.
                         # New ServiceBusMessageBatch object can be created here to send more data.
                         pass
-                    sender.send_messages(batch_message)
+                sender.send_messages(batch_message)
+                self.custom_log_obj.log_info("%s %s %s %s" % ('Messages sent. Size in bytes: ',
+                                                              batch_message.size_in_bytes, ', Count: ', count))
 
 
 
