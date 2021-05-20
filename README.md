@@ -113,7 +113,9 @@ python service_bus.py -l system_path peek_sub
 ```
 
 There is a configuration file at the root of the project where it is possible to add the service 
-bus settings more easily. It can also be configured via environment.
+bus settings more easily. 
+
+It is loaded by default at the root of the main file folder. It can also be configured via environment.
 
 <h1><a href="#environment-variables">Environment variables</a></h1>
 
