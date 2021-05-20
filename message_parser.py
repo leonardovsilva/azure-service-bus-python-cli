@@ -51,13 +51,13 @@ class ServiceBusMessageParser:
 
     @property
     def scheduled_enqueue_time_utc(self):
-        if self._scheduled_enqueue_time_utc is not None:
+        if self._scheduled_enqueue_time_utc is not None and self._scheduled_enqueue_time_utc != '':
             self._scheduled_enqueue_time_utc = datetime.strptime(self._scheduled_enqueue_time_utc, '%Y-%m-%dT%H:%M:%SZ')
         return self._scheduled_enqueue_time_utc
 
     @property
     def time_to_live(self):
-        if self._time_to_live is not None:
+        if self._time_to_live is not None and self._time_to_live != '':
             datetime_1 = datetime.now()
             datetime_2 = datetime.strptime(self._time_to_live, '%Y-%m-%dT%H:%M:%SZ')
             a_timedelta = datetime_2 - datetime_1

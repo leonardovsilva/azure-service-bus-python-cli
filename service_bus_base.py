@@ -34,25 +34,25 @@ class ServiceBusBase:
         try:
             self.CONNECTION_STR = config_obj.config_export['DEFAULT']['ServiceBusConnectionStr']
             self.ctx.obj['CONNECTION_STR'] = self.CONNECTION_STR
-        except TypeError:
+        except Exception:
             self.custom_log_obj.log_info("'ServiceBusConnectionStr' not defined in servicebus.conf")
 
         try:
             self.SERVICE_BUS_QUEUE_NAME = config_obj.config_export['DEFAULT']['QueueName']
             self.ctx.obj['QUEUE_NAME'] = self.SERVICE_BUS_QUEUE_NAME
-        except TypeError:
+        except Exception:
             self.custom_log_obj.log_info("'QueueName' not defined in servicebus.conf")
 
         try:
             self.SERVICE_BUS_TOPIC_NAME = config_obj.config_export['DEFAULT']['TopicName']
             self.ctx.obj['TOPIC_NAME'] = self.SERVICE_BUS_TOPIC_NAME
-        except TypeError:
+        except Exception:
             self.custom_log_obj.log_info("'TopicName' not defined in servicebus.conf")
 
         try:
             self.SERVICE_BUS_SUBSCRIPTION_NAME = config_obj.config_export['DEFAULT']['SubscriptionName']
             self.ctx.obj['SUBSCRIPTION_NAME'] = self.SERVICE_BUS_SUBSCRIPTION_NAME
-        except TypeError:
+        except Exception:
             self.custom_log_obj.log_info("'SubscriptionName' not defined in servicebus.conf")
 
     def init_variables(self):
