@@ -17,7 +17,7 @@
 # Features :running:
 
 - [x] Send messages to a service bus queue
-- [ ] Send messages to a service bus subscription
+- [x] Send messages to a service bus subscription
 - [x] Peek messages from queue
 - [x] Peek messages from subscription
 - [x] Purge all messages from queue
