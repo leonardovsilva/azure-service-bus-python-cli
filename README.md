@@ -56,6 +56,7 @@ python service_bus.py peek_queue --pretty
 ```
 
 dl or --dead_letter:  Peek messages from the dead letter :ghost:
+-s or --session: When queue session is used
 
 ## Peek subscription command
 
@@ -64,6 +65,11 @@ Check messages in the subscription without receiving messages.
 ```console
 python service_bus.py peek_sub
 ```
+peek_sub - Options
+
+--pretty: Make pretty JSON in the console :sparkles:
+dl or --dead_letter:  Peek messages from the dead letter :ghost:
+-s or --session: When queue session is used
 
 ## Purge queue command 
 
@@ -76,6 +82,7 @@ python service_bus.py purge_queue
 purge_queue - Options
 
 dl or --dead_letter:  from the dead letter :ghost:
+-s or --session: When queue session is used
 
 ## Purge subscription command
 
@@ -88,6 +95,7 @@ python service_bus.py purge_sub
 purge_sub - Options
 
 dl or --dead_letter:  from the dead letter :ghost:
+-s or --session: When queue session is used
 
 ## Send messages command
 
@@ -100,6 +108,9 @@ python service_bus.py message_queue -i file
 ```console
 python service_bus.py message_topic -i file
 ```
+message - Options
+
+-s or --session: When queue session is used
 
 <h1><a href="#root-options">Root options</a></h1>
 
