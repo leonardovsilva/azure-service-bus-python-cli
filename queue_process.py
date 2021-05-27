@@ -149,6 +149,9 @@ class QueueProcess(service_bus_base.ServiceBusBase):
                 for message in json_messages:
                     message_parser = ServiceBusMessageParser(**message)
                     message_obj = message_parser.get_service_bus_message()
+                    if self.ctx.obj['USE_SESSION']:
+                        if message_obj.session_id is None or message_obj.session_id == '':
+                            message_obj.session_id = 'SESSION_ID'
                     try:
                         batch_message.add_message(message_obj)
                         count += 1
