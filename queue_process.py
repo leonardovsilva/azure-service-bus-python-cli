@@ -89,11 +89,20 @@ class QueueProcess(service_bus_base.ServiceBusBase):
 
     def get_receiver_mode(self, receive_mode: str) -> ServiceBusReceiver:
         if self.ctx.obj['DEAD_LETTER']:
-            receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
-                                                                  sub_queue=self.DEAD_LETTER, receive_mode=receive_mode)
+            if self.ctx.obj['USE_SESSION']:
+                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
+                                                                      sub_queue=self.DEAD_LETTER, receive_mode=receive_mode, session_id='SESSION_ID')
+            else:
+                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
+                                                                      sub_queue=self.DEAD_LETTER,
+                                                                      receive_mode=receive_mode)
         else:
-            receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
-                                                                  receive_mode=receive_mode)
+            if self.ctx.obj['USE_SESSION']:
+                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
+                                                                      receive_mode=receive_mode, session_id='SESSION_ID')
+            else:
+                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
+                                                                      receive_mode=receive_mode)
 
         return receiver
 
