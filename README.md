@@ -56,6 +56,7 @@ python service_bus.py peek_queue --pretty
 ```
 
 dl or --dead_letter:  Peek messages from the dead letter :ghost:
+
 -s or --session: When queue session is used
 
 ## Peek subscription command
@@ -68,7 +69,9 @@ python service_bus.py peek_sub
 peek_sub - Options
 
 --pretty: Make pretty JSON in the console :sparkles:
+
 dl or --dead_letter:  Peek messages from the dead letter :ghost:
+
 -s or --session: When queue session is used
 
 ## Purge queue command 
@@ -82,6 +85,7 @@ python service_bus.py purge_queue
 purge_queue - Options
 
 dl or --dead_letter:  from the dead letter :ghost:
+
 -s or --session: When queue session is used
 
 ## Purge subscription command
@@ -95,6 +99,7 @@ python service_bus.py purge_sub
 purge_sub - Options
 
 dl or --dead_letter:  from the dead letter :ghost:
+
 -s or --session: When queue session is used
 
 ## Send messages command
