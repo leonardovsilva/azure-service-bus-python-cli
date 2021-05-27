@@ -47,7 +47,7 @@ Check messages in the queue without receiving messages.
 python service_bus.py peek_queue
 ```
 
-peek_queue - Options
+**peek_queue - Options**
 
 --pretty: Make pretty JSON in the console :sparkles:
 
@@ -66,7 +66,7 @@ Check messages in the subscription without receiving messages.
 ```console
 python service_bus.py peek_sub
 ```
-peek_sub - Options
+**peek_sub - Options**
 
 --pretty: Make pretty JSON in the console :sparkles:
 
@@ -82,7 +82,7 @@ Purge all messages from the queue.
 python service_bus.py purge_queue
 ```
 
-purge_queue - Options
+**purge_queue - Options**
 
 dl or --dead_letter:  from the dead letter :ghost:
 
@@ -96,7 +96,7 @@ Purge all messages from the subscription. :finnadie:
 python service_bus.py purge_sub
 ```
 
-purge_sub - Options
+**purge_sub - Options**
 
 dl or --dead_letter:  from the dead letter :ghost:
 
@@ -113,7 +113,7 @@ python service_bus.py message_queue -i file
 ```console
 python service_bus.py message_topic -i file
 ```
-message - Options
+**message - Options**
 
 -s or --session: When queue session is used
 
