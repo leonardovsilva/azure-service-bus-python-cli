@@ -74,14 +74,14 @@ class QueueProcess(service_bus_base.ServiceBusBase):
     def get_receiver(self) -> ServiceBusReceiver:
         if self.ctx.obj['DEAD_LETTER']:
             if self.ctx.obj['USE_SESSION']:
-                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'], session_id='SESSION_ID',
+                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'], session_id=self.ctx.obj['SESSION'],
                                                                   sub_queue=self.DEAD_LETTER)
             else:
                 receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
                                                                       sub_queue=self.DEAD_LETTER)
         else:
             if self.ctx.obj['USE_SESSION']:
-                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'], session_id='SESSION_ID')
+                receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'], session_id=self.ctx.obj['SESSION'])
             else:
                 receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'])
 
@@ -91,7 +91,7 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         if self.ctx.obj['DEAD_LETTER']:
             if self.ctx.obj['USE_SESSION']:
                 receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
-                                                                      sub_queue=self.DEAD_LETTER, receive_mode=receive_mode, session_id='SESSION_ID')
+                                                                      sub_queue=self.DEAD_LETTER, receive_mode=receive_mode, session_id=self.ctx.obj['SESSION'])
             else:
                 receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
                                                                       sub_queue=self.DEAD_LETTER,
@@ -99,7 +99,7 @@ class QueueProcess(service_bus_base.ServiceBusBase):
         else:
             if self.ctx.obj['USE_SESSION']:
                 receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
-                                                                      receive_mode=receive_mode, session_id='SESSION_ID')
+                                                                      receive_mode=receive_mode, session_id=self.ctx.obj['SESSION'])
             else:
                 receiver = self.service_bus_client.get_queue_receiver(queue_name=self.ctx.obj['QUEUE_NAME'],
                                                                       receive_mode=receive_mode)
@@ -151,7 +151,7 @@ class QueueProcess(service_bus_base.ServiceBusBase):
                     message_obj = message_parser.get_service_bus_message()
                     if self.ctx.obj['USE_SESSION']:
                         if message_obj.session_id is None or message_obj.session_id == '':
-                            message_obj.session_id = 'SESSION_ID'
+                            message_obj.session_id = self.ctx.obj['SESSION']
                     try:
                         batch_message.add_message(message_obj)
                         count += 1

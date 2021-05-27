@@ -16,8 +16,9 @@ from topic_process import TopicProcess
 @click.option('--topic_name', '-tn', required=False, help="Name of the message bus topic")
 @click.option('--subscription_name', '-sn', required=False, help="Name of the message bus subscription")
 @click.option('--log_path', '-l', required=False, default=None, type=click.Path(exists=True), help="Path to log console outputs")
-@click.option('--session', '-s', is_flag=True, help="When queue session is used")
-def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path, session):
+@click.option('--default_session', '-ds', is_flag=True, help="When a queue session is used, the session name by default is called SESSION_ID")
+@click.option('--session', '-s', required=False, help="Session name to be used")
+def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path, default_session, session):
     group_commands = ['peek_queue', 'purge_queue']
     """
         serviceBusPythonExplorer is a command line tool that helps management Azure Service Bus.\n
@@ -34,7 +35,11 @@ def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path, sess
     ctx.obj['TOPIC_NAME'] = topic_name
     ctx.obj['SUBSCRIPTION_NAME'] = subscription_name
     ctx.obj['LOG_PATH'] = log_path
-    ctx.obj['USE_SESSION'] = session
+    ctx.obj['USE_SESSION'] = False
+    if default_session or (session is not None and session != ''):
+        ctx.obj['USE_SESSION'] = True
+        ctx.obj['SESSION'] = session
+        set_session_id(ctx)
 
     set_console_color()
 
@@ -46,6 +51,12 @@ def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path, sess
         print(subscription_name)
     #config_obj = config.Config()
     #config_obj.init()
+
+
+def set_session_id(ctx):
+    if ctx.obj['USE_SESSION']:
+        if ctx.obj['SESSION'] is None or ctx.obj['SESSION'] == '':
+            ctx.obj['SESSION'] = 'SESSION_ID'
 
 
 def set_console_color():

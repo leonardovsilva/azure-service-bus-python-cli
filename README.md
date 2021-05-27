@@ -55,9 +55,9 @@ python service_bus.py peek_queue
 python service_bus.py peek_queue --pretty
 ```
 
-dl or --dead_letter:  Peek messages from the dead letter :ghost:
-
--s or --session: When queue session is used
+dl or --dead_letter:  Peek messages from the dead letter :ghost: <br>
+-s or --session: Session name to be used <br>
+-ds or --default_session': When a queue session is used, the session name by default is called SESSION_ID
 
 ## Peek subscription command
 
@@ -68,11 +68,10 @@ python service_bus.py peek_sub
 ```
 **peek_sub - Options**
 
---pretty: Make pretty JSON in the console :sparkles:
-
-dl or --dead_letter:  Peek messages from the dead letter :ghost:
-
--s or --session: When queue session is used
+--pretty: Make pretty JSON in the console :sparkles: <br>
+dl or --dead_letter:  Peek messages from the dead letter :ghost: <br>
+-s or --session: Session name to be used <br>
+-ds or --default_session': When a queue session is used, the session name by default is called SESSION_ID
 
 ## Purge queue command 
 
@@ -84,9 +83,9 @@ python service_bus.py purge_queue
 
 **purge_queue - Options**
 
-dl or --dead_letter:  from the dead letter :ghost:
-
--s or --session: When queue session is used
+dl or --dead_letter:  from the dead letter :ghost: <br>
+-s or --session: Session name to be used <br>
+-ds or --default_session': When a queue session is used, the session name by default is called SESSION_ID
 
 ## Purge subscription command
 
@@ -98,9 +97,9 @@ python service_bus.py purge_sub
 
 **purge_sub - Options**
 
-dl or --dead_letter:  from the dead letter :ghost:
-
--s or --session: When queue session is used
+dl or --dead_letter:  from the dead letter :ghost: <br>
+-s or --session: Session name to be used <br>
+-ds or --default_session': When a queue session is used, the session name by default is called SESSION_ID
 
 ## Send messages command
 
@@ -115,7 +114,8 @@ python service_bus.py message_topic -i file
 ```
 **message - Options**
 
--s or --session: When queue session is used
+-s or --session: Session name to be used <br>
+-ds or --default_session': When a queue session is used, the session name by default is called SESSION_ID
 
 <h1><a href="#root-options">Root options</a></h1>
 

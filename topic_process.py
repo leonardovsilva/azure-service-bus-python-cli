@@ -103,7 +103,7 @@ class TopicProcess(service_bus_base.ServiceBusBase):
                 receiver = self.service_bus_client\
                     .get_subscription_receiver(topic_name=self.ctx.obj['TOPIC_NAME'],
                                                subscription_name=self.ctx.obj['SUBSCRIPTION_NAME'],
-                                               sub_queue=self.DEAD_LETTER, session_id='SESSION_ID')
+                                               sub_queue=self.DEAD_LETTER, session_id=self.ctx.obj['SESSION'])
             else:
                 receiver = self.service_bus_client \
                     .get_subscription_receiver(topic_name=self.ctx.obj['TOPIC_NAME'],
@@ -113,7 +113,7 @@ class TopicProcess(service_bus_base.ServiceBusBase):
             if self.ctx.obj['USE_SESSION']:
                 receiver = self.service_bus_client\
                     .get_subscription_receiver(topic_name=self.ctx.obj['TOPIC_NAME'],
-                                               subscription_name=self.ctx.obj['SUBSCRIPTION_NAME'], session_id='SESSION_ID')
+                                               subscription_name=self.ctx.obj['SUBSCRIPTION_NAME'], session_id=self.ctx.obj['SESSION'])
             else:
                 receiver = self.service_bus_client \
                     .get_subscription_receiver(topic_name=self.ctx.obj['TOPIC_NAME'],
@@ -130,7 +130,7 @@ class TopicProcess(service_bus_base.ServiceBusBase):
                 receiver = self.service_bus_client\
                     .get_subscription_receiver(topic_name=self.ctx.obj['TOPIC_NAME'],
                                                subscription_name=self.ctx.obj['SUBSCRIPTION_NAME'],
-                                               sub_queue=self.DEAD_LETTER, receive_mode=receive_mode, session_id='SESSION_ID')
+                                               sub_queue=self.DEAD_LETTER, receive_mode=receive_mode, session_id=self.ctx.obj['SESSION'])
             else:
                 receiver = self.service_bus_client \
                     .get_subscription_receiver(topic_name=self.ctx.obj['TOPIC_NAME'],
@@ -141,7 +141,7 @@ class TopicProcess(service_bus_base.ServiceBusBase):
                 receiver = self.service_bus_client\
                     .get_subscription_receiver(topic_name=self.ctx.obj['TOPIC_NAME'],
                                                subscription_name=self.ctx.obj['SUBSCRIPTION_NAME'],
-                                               receive_mode=receive_mode, session_id='SESSION_ID')
+                                               receive_mode=receive_mode, session_id=self.ctx.obj['SESSION'])
             else:
                 receiver = self.service_bus_client \
                     .get_subscription_receiver(topic_name=self.ctx.obj['TOPIC_NAME'],
@@ -163,7 +163,7 @@ class TopicProcess(service_bus_base.ServiceBusBase):
                     message_obj = message_parser.get_service_bus_message()
                     if self.ctx.obj['USE_SESSION']:
                         if message_obj.session_id is None or message_obj.session_id == '':
-                            message_obj.session_id = 'SESSION_ID'
+                            message_obj.session_id = self.ctx.obj['SESSION']
                     try:
                         batch_message.add_message(message_obj)
                         count += 1

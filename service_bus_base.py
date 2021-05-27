@@ -102,3 +102,4 @@ class ServiceBusBase:
         self.custom_log_obj.log_info("%s %s" % ('Message encoded size: ', msg.message.get_message_encoded_size(),))
         json_str = json.dumps(msg, cls=service_bus_custom_encoder.ServiceBusCustomEncoder)
         self.custom_log_obj.log_info(json_str.replace("\\", ""))
+
