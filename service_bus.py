@@ -16,7 +16,8 @@ from topic_process import TopicProcess
 @click.option('--topic_name', '-tn', required=False, help="Name of the message bus topic")
 @click.option('--subscription_name', '-sn', required=False, help="Name of the message bus subscription")
 @click.option('--log_path', '-l', required=False, default=None, type=click.Path(exists=True), help="Path to log console outputs")
-def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path):
+@click.option('--session', '-s', is_flag=True, help="When queue session is used")
+def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path, session):
     group_commands = ['peek_queue', 'purge_queue']
     """
         serviceBusPythonExplorer is a command line tool that helps management Azure Service Bus.\n
@@ -33,6 +34,7 @@ def main(ctx, verbose, queue_name, topic_name, subscription_name, log_path):
     ctx.obj['TOPIC_NAME'] = topic_name
     ctx.obj['SUBSCRIPTION_NAME'] = subscription_name
     ctx.obj['LOG_PATH'] = log_path
+    ctx.obj['USE_SESSION'] = session
 
     set_console_color()
 
