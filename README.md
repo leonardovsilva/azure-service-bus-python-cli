@@ -17,7 +17,7 @@
 # Features :running:
 
 - [x] Send messages to a service bus queue
-- [ ] Send messages to a service bus subscription
+- [x] Send messages to a service bus subscription
 - [x] Peek messages from queue
 - [x] Peek messages from subscription
 - [x] Purge all messages from queue
@@ -89,17 +89,17 @@ purge_sub - Options
 
 dl or --dead_letter:  from the dead letter :ghost:
 
-## Send messages command (queue)
+## Send messages command
 
-Send messages to a service bus queue using a json template. The model file is at the root of the project
+Send messages to a service bus queue or topic using a json template. The model file is at the root of the project
 
 ```console
 python service_bus.py message_queue -i file
 ```
 
-purge_sub - Options
-
-dl or --dead_letter:  from the dead letter :ghost:
+```console
+python service_bus.py message_topic -i file
+```
 
 <h1><a href="#root-options">Root options</a></h1>
 
@@ -113,7 +113,9 @@ python service_bus.py -l system_path peek_sub
 ```
 
 There is a configuration file at the root of the project where it is possible to add the service 
-bus settings more easily. It can also be configured via environment.
+bus settings more easily. 
+
+It is loaded by default at the root of the main file folder. It can also be configured via environment.
 
 <h1><a href="#environment-variables">Environment variables</a></h1>
 
@@ -121,6 +123,7 @@ bus settings more easily. It can also be configured via environment.
 - SERVICE_BUS_QUEUE_NAME
 - SERVICE_BUS_TOPIC_NAME
 - SERVICE_BUS_SUBSCRIPTION_NAME
+- SERVICEBUS_CONF (Path of config file)
 
 <h1><a href="#important">Important :exclamation:</a></h1>
 
