@@ -27,6 +27,7 @@
 - [ ] Rescheduling messages
 - [ ] Receive messages from queue
 - [ ] Receive messages from subscription
+- [ ] Refator session to use NEXT_AVAILABLE_SESSION
 
 <h1><a href="#usage-examples">Usage examples</a></h1>
 
