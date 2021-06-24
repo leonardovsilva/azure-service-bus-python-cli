@@ -14,7 +14,7 @@
    * [Author](#author)
 <!--te-->
 
-# Features :running:
+# Roadmap to v1 :running:
 
 - [x] Send messages to a service bus queue
 - [x] Send messages to a service bus subscription
@@ -28,6 +28,7 @@
 - [ ] Receive messages from queue
 - [ ] Receive messages from subscription
 - [ ] Refator session to use NEXT_AVAILABLE_SESSION
+- [ ] Connection string parser
 
 <h1><a href="#usage-examples">Usage examples</a></h1>
 
