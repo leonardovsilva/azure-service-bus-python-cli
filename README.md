@@ -1,4 +1,4 @@
-# Python Service Bus Explorer
+# Python Service Bus CLI
 
 🚀 Command line software to manage azure service bus service. Made in pyhton for cross-platform compatibility.
 
